@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+  <meta charset="UTF-8">
+
+  <title>PIR - Dashboard</title>
+  
+  <!--Google Font - Work Sans-->
+<link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,700' rel='stylesheet' type='text/css'>
+
+
+<!-- JS per il funzionamento di HBR -->
+<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+<script type="text/javascript" src="http://www.hotblackrobotics.com/cloud/webgui/static/js/initros.js"></script>
+
+<script type="text/javascript">
+start_ros('192.168.0.107', 'cyberbot', '192.168.0.107', '192.168.0.107/bridge/');
+</script>
+
+  
+ <style>
+html {
+  font-size: 100%;
+  line-height: 1.5;
+  height: 100%;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  font-family: 'Work Sans', Arial, Helvetica, sans-serif;
+  min-height: 100%;
+  background: linear-gradient(to bottom, #68EACC 0%, #497BE8 100%);
+  color: #777;
+}
+img {
+  vertical-align: middle;
+  max-width: 100%;
+
+}
+button {
+outline:none;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+/* Container */
+.container {
+  position: absolute;
+  width: 24em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  animation: intro .7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.contenuto .area {
+  visibility: visible;
+  height: auto;
+  opacity: 1;
+  transform: translateY(-6em);
+  padding-top: 12em;
+}
+
+
+.area {
+  position: relative;
+  background: white;
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  padding: 3em;
+  border-radius: .25em;
+  -webkit-filter: drop-shadow(0 0 2em rgba(0,0,0,0.2));
+  transition: 
+    opacity .4s ease-in-out,
+    height .4s ease-in-out,
+    transform .4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    padding .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.immagine {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 1.25em;
+  overflow: hidden;
+  width: 4.5em;
+  height: 4.5em;
+  display: block;
+  transition: transform .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: transform;
+}
+
+</style>
+</head>
+
+
+<script>
+var listener = new ROSLIB.Topic({
+      ros : ros,
+      name : '/' + robot.name + '/pir_status',
+      messageType : 'std_msgs/Bool'
+    });
+
+listener.subscribe(function pir (message){
+if (!message.data) {
+document.getElementById("msg").innerHTML = "Movimento non rilevato!";
+document.getElementById("msg").style.color = "green";
+document.getElementById("msg").style.textAlign = "center";
+document.getElementById('myImage').src="http://i.imgur.com/OLDT3iW.png";
+}
+else {
+document.getElementById("msg").innerHTML = "Il sensore ha rilevato un movimento!";
+document.getElementById("msg").style.color = "red";
+document.getElementById("msg").style.textAlign = "center";
+document.getElementById('myImage').src="http://i.imgur.com/PUZqPXq.png";
+}
+});
+
+</script>
+
+
+<div class="container">
+<div class="contenuto">
+<button class="immagine">
+<img id="myImage" src="http://i.imgur.com/OLDT3iW.png" /> 
+</button>
+<div class="area">
+<p id="msg" align="center" style="color:green">Movimento non rilevato!</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
+ 
